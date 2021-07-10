@@ -3,7 +3,6 @@ import cors from "cors";
 import express from "express";
 import "reflect-metadata";
 import { Socket } from "socket.io";
-import http from "http";
 import { createBuildSchema } from "./utils/createSchema";
 import { createConnection } from "typeorm";
 
@@ -11,7 +10,6 @@ const main = async () => {
   await createConnection();
 
   const app = express();
-  const httpServer = http.createServer(app);
   const schema = await createBuildSchema();
 
   app.use(
@@ -31,9 +29,12 @@ const main = async () => {
 
   apolloServer.applyMiddleware({ app });
 
-  httpServer.listen(5000, () => console.log("Server Started at Port 5000"));
-  const io = require("socket.io")(httpServer);
+  const server = app.listen(5000, () =>
+    console.log("Server Started at Port 5000")
+  );
+  const io = require("socket.io")(server);
   io.on("connection", (socket: Socket) => {
+    console.log("Socket Started");
     socket.emit("step1", socket.id);
   });
 };
