@@ -10,4 +10,8 @@ export class User extends BaseEntity {
   @Field()
   @Column("text", { unique: true })
   username: string;
+
+  @Field()
+  @Column("text", { default: "offline" })
+  status: string;
 }

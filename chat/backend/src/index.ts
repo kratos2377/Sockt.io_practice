@@ -35,7 +35,7 @@ const main = async () => {
   const io = require("socket.io")(server);
   io.on("connection", (socket: Socket) => {
     console.log("Socket Started");
-    socket.emit("step1", socket.id);
+    socket.emit("start", socket.id);
   });
 };
 
