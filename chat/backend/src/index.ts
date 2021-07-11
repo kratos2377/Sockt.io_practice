@@ -5,6 +5,10 @@ import "reflect-metadata";
 import { Socket } from "socket.io";
 import { createBuildSchema } from "./utils/createSchema";
 import { createConnection } from "typeorm";
+import { availableUsers } from "./globals/global";
+interface UserDetails {
+  username: string;
+}
 
 const main = async () => {
   await createConnection();
@@ -14,8 +18,11 @@ const main = async () => {
 
   app.use(
     cors({
-      origin: "http://localhost:3000",
-      methods: "GET",
+      origin: [
+        "http://localhost:3000",
+        "http://localhost:19006",
+        "http://10.0.2.2:3000",
+      ],
     })
   );
 
@@ -34,8 +41,13 @@ const main = async () => {
   );
   const io = require("socket.io")(server);
   io.on("connection", (socket: Socket) => {
-    console.log("Socket Started");
-    socket.emit("start", socket.id);
+    socket.emit("connected", { socketId: socket.id });
+
+    socket.on("started", (userDetails: UserDetails) => {
+      console.log(userDetails);
+      availableUsers.set(socket.id, userDetails);
+      console.log(availableUsers);
+    });
   });
 };
 

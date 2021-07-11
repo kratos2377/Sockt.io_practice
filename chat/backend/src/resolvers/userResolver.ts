@@ -3,12 +3,12 @@ import { Arg, Mutation, Resolver } from "type-graphql";
 
 @Resolver(User)
 export class UserResolver {
-  @Mutation(() => User)
-  async register(@Arg("username") username: string): Promise<User | boolean> {
+  @Mutation(() => User, { nullable: true })
+  async register(@Arg("username") username: string): Promise<User | null> {
     const user = await User.findOne({ username: username });
 
     if (user) {
-      return false;
+      return null;
     }
 
     const user1 = await User.create({
