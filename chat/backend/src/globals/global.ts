@@ -8,5 +8,12 @@
 //   gender: string;
 // }
 
+type SocketType = {
+  userSocket1: string;
+  userSocket2: string;
+};
+
 export const availableUsers = new Map();
-export const rooms = [];
+export const roomValues = new Map<string, SocketType>();
+export const onlineUsers: string[] = [];
+export const rooms: string[] = [];
